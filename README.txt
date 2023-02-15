@@ -29,7 +29,7 @@ LISA2 = 0.05
 
 6. Once all results have been uploaded, click the "Submit All Results" button. On the right, the app will generate a table displaying the file names of the files that were uploaded along with the corresponding tool the results are from. If any files were uploaded to the wrong tool by mistake, simply hit the "Reset Input" button for that tool and re-upload the correct results.
 
-7. When you have confirmed that all results were uploaded correctly, hit the "Generate Multi-Method Rank Table button" which will then display the table to the right showing all TFs which were predicted by more than 2 of the tools used. If you wish to see full data table with all TFs predicted by at least one tool, you can download the .csv file using the "Download Full Table CSV File" button located below the table.
+7. When you have confirmed that all results were uploaded correctly, hit the "Generate Multi-Method Rank Table" button which will then display the table to the right showing all TFs which were predicted by more than 2 of the tools used. If you wish to see full data table with all TFs predicted by at least one tool, you can download the .csv file using the "Download Full Table CSV File" button located below the table.
 
 
 
