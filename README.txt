@@ -6,11 +6,11 @@ EnsembleTFPredictor is an ensemble approach to rank putative causal transcriptio
 
 A directory named EnsembleTFPredictor will appear.
 
-2. Install the R package Shiny, for example using the following command:
+2. Install the R package Shiny, for example using the following command in RStudio:
 
 install.packages("shiny")
 
-3. In the directory containing the EnsembleTFPredictor directory, run the following command:
+3. Set your working directory to the directory containing the EnsembleTFPredictor directory, run the following command:
 
 runApp("EnsembleTFPredictor")
 
