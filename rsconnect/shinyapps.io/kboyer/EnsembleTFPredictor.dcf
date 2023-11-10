@@ -1,0 +1,12 @@
+name: EnsembleTFPredictor
+title: EnsembleTFPredictor
+username: kboyer
+account: kboyer
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10487192
+bundleId: 7912582
+url: https://kboyer.shinyapps.io/EnsembleTFPredictor/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

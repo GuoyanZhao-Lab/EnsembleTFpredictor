@@ -1,3 +1,8 @@
+#Load libraries
+library(stringr)
+library(tidyverse)
+library(dplyr)
+library(purrr)
 #Create function for each method
 
 ## Function to read MORA result file
@@ -5,7 +10,6 @@ Read_MORA <- function(InputFile) {
   
   MORA <- read.csv(InputFile)
   MORA <-as.data.frame(sapply(MORA, toupper),stringsAsFactors=FALSE)
-  MORA <- MORA[MORA$padj <= 0.05,]
   MORA <- MORA[c("TF_Name", "Family_Name")]
   MORA$TF_Name <- toupper(MORA$TF_Name)
   colnames(MORA)[1]<- "MORA"
@@ -88,18 +92,16 @@ Read_LISA2 <- function(InputFile) {
 
 # Function to integrate results from multiple tools and rank TFs
 RankTF <- function(List_results, OutputFile) {
-  library(tidyverse)
-  library(dplyr)
-  library(purrr)
+
   
   MethodNames <- names(List_results)
   MethodNames <- unlist(lapply(List_results, function(x)  colnames(x)[[1]]))
   # ID refers ENSEMBLE ID if has one or other IDs
   new <- List_results %>% reduce(full_join, by = "DBID")
-  new <- dplyr::left_join(new, CISBP_db_clean[,c(1,2)], by="DBID",ignore_case = TRUE)
+  new <- dplyr::left_join(new, CISBP_db_clean[,c(1,2)], by="DBID")
   new <-  new %>% mutate_at(MethodNames, ~replace(., !is.na(.), 1))
   new <-  new %>% mutate_at(MethodNames, ~replace(., is.na(.), 0))
-  new <-  new %>% mutate_at(MethodNames, as.numeric, options(digits=0))
+  new <-  new %>% mutate_at(MethodNames, as.numeric)
   
   new2 <- new[order(new$TF_Name), ] #sort by TF_Name 
   # If a TF is predicted at least once then all values of this TF_Name will be change to 1 to signify predicted.

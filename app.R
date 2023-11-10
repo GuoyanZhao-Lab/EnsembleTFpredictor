@@ -305,6 +305,7 @@ server <- function(input, output, session) {
   
   if ("MORA" %in% input$tools){
     df_MORA <- Read_MORA(file_input_MORA()$datapath)
+    df_MORA$MORA <- toupper(df_MORA$MORA)
     MORA_final <- dplyr::left_join(df_MORA, CISBP_db_clean, by = c("MORA" = "TF_Name"))
     MORA_final <- MORA_final[c("MORA", "DBID")]
     MORA <- rbind(MORA_final, MORA)
@@ -328,6 +329,7 @@ server <- function(input, output, session) {
     Homer_CISBP_ref_table_final <- read.csv("data/Homer_DB_motifs_TF_With_CISBP_info_merged_FinalRefTable.csv")
     df_HOMER_clean <- merge(df_HOMER, Homer_CISBP_ref_table_final, by = c("HomerID", "TF_Name"), all = FALSE)
     HOMER_final <-as.data.frame(sapply(df_HOMER_clean, toupper),stringsAsFactors=FALSE)
+    HOMER_final <- HOMER_final[HOMER_final$P.value <= 1e-1,]
     HOMER_final <- HOMER_final["TF_Name"]
     colnames(HOMER_final)[1]<- "HOMER"
     HOMER_final <- dplyr::left_join(HOMER_final,HOMERMasterTable, by = c("HOMER"="TF_Name"))
