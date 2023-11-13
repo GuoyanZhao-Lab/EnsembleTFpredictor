@@ -5,7 +5,7 @@ account: kboyer
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 10487192
-bundleId: 7912582
+bundleId: 7922152
 url: https://kboyer.shinyapps.io/EnsembleTFPredictor/
 version: 1
 asMultiple: FALSE

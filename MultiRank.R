@@ -22,6 +22,7 @@ Read_AME <- function(InputFile) {
   
   AME <- read.delim(InputFile)
   AME <- as.data.frame(sapply(AME, toupper),stringsAsFactors=FALSE)
+  AME$adj_p.value <- as.numeric(AME$adj_p.value)
   AME <- AME[AME$adj_p.value <= 0.05,]
   AME$TF_Name <- toupper(AME$motif_alt_ID)
   AME$TF_Name <- sapply(strsplit(AME$TF_Name, "\\)"), function(x){x[1]})
@@ -38,7 +39,7 @@ Read_HOMER <- function(InputFile) {
   
   HOMER <- read.csv(InputFile)
   HOMER <-as.data.frame(sapply(HOMER, toupper),stringsAsFactors=FALSE)
-  HOMER <- HOMER[HOMER$P.value <= 0.1,]
+  
   HOMER <- HOMER["TF_Name"]
   colnames(HOMER)[1]<- "HOMER"
   HOMER <- dplyr::left_join(HOMER,HOMERMasterTable, by = c("HOMER"="TF_Name"))
@@ -52,6 +53,7 @@ Read_PSCAN <- function(InputFile) {
   
   PSCAN <- read.delim(InputFile)
   PSCAN <-as.data.frame(sapply(PSCAN, toupper),stringsAsFactors=FALSE)
+  PSCAN$P_VALUE <- as.numeric(PSCAN$P_VALUE)
   PSCAN <- PSCAN[PSCAN$P_VALUE <= 0.05,]
   PSCAN <- PSCAN["MATRIX_ID"]
   PSCAN <- merge(PSCAN,PSCANMasterTable, by = "MATRIX_ID")
@@ -67,10 +69,11 @@ Read_BART2 <- function(InputFile) {
   
   BART2 <- read.delim(InputFile)
   BART2 <-as.data.frame(sapply(BART2, toupper),stringsAsFactors=FALSE)
+  BART2$irwin_hall_pvalue <- as.numeric(BART2$irwin_hall_pvalue)
   BART2 <- BART2[BART2$irwin_hall_pvalue <= 0.05,]
   BART2 <- BART2["TF"]
   colnames(BART2)[1]<- "BART2"
-  BART2 <- dplyr::left_join(BART2,BART2MasterTable, by = c("BART2"="TF_Name"))
+  BART2 <- dplyr::left_join(BART2,BART2MasterTable, by = c("BART2"="TF_Name"), relationship = "many-to-many")
   return(BART2)
 }
 
@@ -81,17 +84,18 @@ Read_LISA2 <- function(InputFile) {
   
   LISA2 <- read.delim(InputFile)
   LISA2 <-as.data.frame(sapply(LISA2, toupper),stringsAsFactors=FALSE)
+  LISA2$summary_p_value <- as.numeric(LISA2$summary_p_value)
   LISA2 <- LISA2[LISA2$summary_p_value <= 0.05,]
   LISA2 <- LISA2["factor"]
   colnames(LISA2)[1]<- "LISA2"
-  LISA2 <- dplyr::left_join(LISA2,LISA2MasterTable, by = c("LISA2"="factor"))
+  LISA2 <- dplyr::left_join(LISA2,LISA2MasterTable, by = c("LISA2"="factor"), relationship = "many-to-many")
   return(LISA2)
 }
 
 
 
 # Function to integrate results from multiple tools and rank TFs
-RankTF <- function(List_results, OutputFile) {
+RankTF <- function(List_results) {
 
   
   MethodNames <- names(List_results)
@@ -119,7 +123,7 @@ RankTF <- function(List_results, OutputFile) {
   Conf_lvl_ranks <- match(Ranks, sort(unique(Ranks)))
   new2$Conf_lvl_ranks <- Conf_lvl_ranks
   final_rank_table <- new2[c("TF_Name", "MORA", "HOMER", "AME", "PSCAN", "BART2", "LISA2", "Num_Yes", "Conf_lvl_ranks")]
-  write.csv(final_rank_table, file=OutputFile, row.names=FALSE)
+  #write.csv(final_rank_table, file=OutputFile, row.names=FALSE)
   return(final_rank_table)
 }
 

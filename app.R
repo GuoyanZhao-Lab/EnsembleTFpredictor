@@ -306,7 +306,7 @@ server <- function(input, output, session) {
   if ("MORA" %in% input$tools){
     df_MORA <- Read_MORA(file_input_MORA()$datapath)
     df_MORA$MORA <- toupper(df_MORA$MORA)
-    MORA_final <- dplyr::left_join(df_MORA, CISBP_db_clean, by = c("MORA" = "TF_Name"))
+    MORA_final <- dplyr::left_join(df_MORA, CISBP_db_clean, by = c("MORA" = "TF_Name"), relationship = "many-to-many")
     MORA_final <- MORA_final[c("MORA", "DBID")]
     MORA <- rbind(MORA_final, MORA)
     
@@ -314,7 +314,7 @@ server <- function(input, output, session) {
   
   if ("AME" %in% input$tools){
     df_AME <- Read_AME(file_input_AME()$datapath)
-    AME_final <- dplyr::left_join(df_AME, CISBP_db_clean, by = c("AME" = "TF_Name"))
+    AME_final <- dplyr::left_join(df_AME, CISBP_db_clean, by = c("AME" = "TF_Name"), relationship = "many-to-many")
     AME_final <- AME_final[c("AME", "DBID")]
     AME <- rbind(AME_final, AME)
     
@@ -327,12 +327,14 @@ server <- function(input, output, session) {
     df_HOMER$TF_Name <- sapply(strsplit(df_HOMER$HomerID, "\\("), function(x){x[1]})
     df_HOMER$TF_Name <- toupper(df_HOMER$TF_Name)
     Homer_CISBP_ref_table_final <- read.csv("data/Homer_DB_motifs_TF_With_CISBP_info_merged_FinalRefTable.csv")
-    df_HOMER_clean <- merge(df_HOMER, Homer_CISBP_ref_table_final, by = c("HomerID", "TF_Name"), all = FALSE)
+    df_HOMER_clean <- merge(df_HOMER, Homer_CISBP_ref_table_final, by = c("HomerID"), all = FALSE)
     HOMER_final <-as.data.frame(sapply(df_HOMER_clean, toupper),stringsAsFactors=FALSE)
-    HOMER_final <- HOMER_final[HOMER_final$P.value <= 1e-1,]
+    HOMER_final$P.value <- as.numeric(HOMER_final$P.value)
+    HOMER_final <- HOMER_final[HOMER_final$P.value <= 0.1,]
+    HOMER_final$TF_Name <- HOMER_final$TF_Name.y
     HOMER_final <- HOMER_final["TF_Name"]
     colnames(HOMER_final)[1]<- "HOMER"
-    HOMER_final <- dplyr::left_join(HOMER_final,HOMERMasterTable, by = c("HOMER"="TF_Name"))
+    HOMER_final <- dplyr::left_join(HOMER_final,HOMERMasterTable, by = c("HOMER"="TF_Name"), relationship = "many-to-many")
     HOMER_final <- HOMER_final[c("HOMER", "DBID")]
     HOMER <- rbind(HOMER_final, HOMER)
     
@@ -342,14 +344,14 @@ server <- function(input, output, session) {
   
   if ("PSCAN" %in% input$tools){
     df_PSCAN <- Read_PSCAN(file_input_PSCAN()$datapath)
-    PSCAN_final <- dplyr::left_join(df_PSCAN, CISBP_db_clean, by = c("PSCAN" = "TF_Name"))
+    PSCAN_final <- dplyr::left_join(df_PSCAN, CISBP_db_clean, by = c("PSCAN" = "TF_Name"), relationship = "many-to-many")
     PSCAN <- rbind(PSCAN_final, PSCAN)
   }
   
   if ("BART2" %in% input$tools){
     df_BART2 <- Read_BART2(file_input_BART2()$datapath)
     df_BART2 <- df_BART2["BART2"]
-    BART2_final <- dplyr::left_join(df_BART2, CISBP_db_clean, by = c("BART2" = "TF_Name"))
+    BART2_final <- dplyr::left_join(df_BART2, CISBP_db_clean, by = c("BART2" = "TF_Name"), relationship = "many-to-many")
     BART2 <- rbind(BART2_final, BART2)
     
   }
@@ -357,14 +359,14 @@ server <- function(input, output, session) {
   if ("LISA2" %in% input$tools){
     df_LISA2 <- Read_LISA2(file_input_LISA2()$datapath)
     df_LISA2 <- df_LISA2["LISA2"]
-    LISA2_final <- dplyr::left_join(df_LISA2, CISBP_db_clean, by = c("LISA2" = "TF_Name"))
+    LISA2_final <- dplyr::left_join(df_LISA2, CISBP_db_clean, by = c("LISA2" = "TF_Name"), relationship = "many-to-many")
     LISA2 <- rbind(LISA2_final, LISA2)
     
   }
   
   
   List_results <- list(MORA, HOMER, AME, PSCAN, BART2, LISA2)
-  final <- RankTF(List_results, OutputFile = "data/final.csv")
+  final <- RankTF(List_results)
   final <- final[, colSums(final != 0) > 0]
   return(final)
  
