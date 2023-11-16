@@ -1,6 +1,6 @@
 EnsembleTFPredictor is an ensemble approach to rank putative causal transcription factors that regulate a set of query genes by prediction confidence. This repository provides source code and documentation of the Shiny R version of the application as well as a link and instructions for using the web portal.
 
-### Local installation:
+Local installation:
 
 1. Download the source code and directories from the GitHub repository, for example using the following command:
 
@@ -33,9 +33,9 @@ LISA2 = 0.05
 
 7. When you have confirmed that all results were uploaded correctly, hit the "Generate Multi-Method Rank Table" button which will then display the table to the right showing all TFs which were predicted by more than 2 of the tools used. If you wish to see full data table with all TFs predicted by at least one tool, you can download the .csv file using the "Download Full Table CSV File" button located below the table.
 
-### ShinyApp Web Portal
+ShinyApp Web Portal
 
-1. Click the following link or copy and paste into your web browser: [(https://kboyer.shinyapps.io/EnsembleTFPredictor/)]
+1. Click the following link or copy and paste into your web browser: https://kboyer.shinyapps.io/EnsembleTFPredictor/
 
 2. Follow steps 4-7 above. Note: You will not be able to change the pvalue cutoffs for the tools using this version.
 
