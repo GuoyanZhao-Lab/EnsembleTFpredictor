@@ -10,7 +10,7 @@ A directory named EnsembleTFPredictor will appear.
 
 2. Install all package dependencies in R/RStudio, for example using the following command:
 
-install.packages(c("shiny", "tidyverse", "dplyr", "purr", "stringr"))
+install.packages(c("shiny", "tidyverse", "dplyr", "purrr", "stringr"))
 
 3. Set your working directory to the location in which you downloaded the EnsembleTFPredictor directory (ex. if you downloaded to the "Documents" directory, set your working directory to "Documents"), run the app using following command:
 
